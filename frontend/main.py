@@ -55,9 +55,10 @@ class Ball(pg.sprite.Sprite):
             self.y = clamp(self.y, self.rect.height/2, SCREENWIDTH - (self.rect.height/2))
             self.verticalspeed *= -1
         collide = pg.sprite.spritecollideany(self, paddles)
+        print('Ball loc:{}'.format(self.rect.center))
         if collide is not None:
-            #print((math.degrees(math.atan2(-(collide.rect.y - self.rect.y), collide.rect.x - self.rect.x))-180)%360)
-            collide = pg.sprite.spritecollideany(self, paddles)
+            # print((math.degrees(math.atan2(-(collide.rect.y - self.rect.y), collide.rect.x - self.rect.x))-180)%360)
+            # collide = pg.sprite.spritecollideany(self, paddles)
             shifts = {
                 "r": abs(self.rect.left - collide.rect.right),
                 "l": abs(self.rect.right - collide.rect.left),
@@ -78,14 +79,16 @@ class Ball(pg.sprite.Sprite):
                     self.x += move[0]
                     self.y -= move[1]
                     bounce = {
-                        "r": (abs((collide.rect.centery - self.y)/(collide.rect.height)/2) * ANGLEMULTIPLIER, 1, -math.copysign(1, collide.rect.centery - self.y)),
-                        "l": (abs((collide.rect.centery - self.y)/(collide.rect.height)/2) * ANGLEMULTIPLIER, -1, -math.copysign(1, collide.rect.centery - self.y)),
+                        "r": (abs((collide.rect.centery - self.y)/(collide.rect.height)/2) * ANGLEMULTIPLIER, 1, math.copysign(1, collide.rect.centery - self.y)),
+                        "l": (abs((collide.rect.centery - self.y)/(collide.rect.height)/2) * ANGLEMULTIPLIER, -1, math.copysign(1, collide.rect.centery - self.y)),
                         "u": (abs((collide.rect.centerx - self.x)/(collide.rect.width)/2) * ANGLEMULTIPLIER, math.copysign(1, collide.rect.centerx - self.x), 1),
                         "d": (abs((collide.rect.centerx - self.x)/(collide.rect.width)/2) * ANGLEMULTIPLIER, math.copysign(1, collide.rect.centerx - self.x), -1)
                     }[k]
                     self.angle = bounce[0]
                     self.horizontalspeed = bounce[1]
                     self.verticalspeed = bounce[2]
+
+                    # print('------------Curr bounch: {}'.format(bounce))
         self.rect.center = (self.x, self.y)
 
 paddle = Paddle(1)
